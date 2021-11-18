@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+
+puts '== Instalando dependÃÂªncias =='
+system 'gem install bundler --conservative'
+system('bundle check') || system('bundle install')
+
+require 'sqlite3'
+
+puts "\n== Preparando banco de dados =="
+begin
+    db = SQLite3::Database.open "/Users/osvaldosneto/Desktop/qsd_app/database.db"
+    db.execute <<~SQL
+        CREATE TABLE Category(
+            id_category INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome VARCHAR(255)
+        );
+        SQL
+
+    puts "\n== Tabela Category criada com sucesso =="
+
+    data = ['HTML', 'PHP', 'Python', 'Java', 'Ruby', 'JavaScript']
+
+    puts "\n== Populando tabela Category criada com sucesso =="
+        
+    data.each do |data|
+        db.execute "INSERT INTO Category (nome) VALUES (?)", data
+    end
+
+    db.execute <<~SQL
+        CREATE TABLE StudyItem(
+            id_studyitem INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome VARCHAR(255),
+            descricao VARCHAR(510),
+            status_item INTEGER NOT NULL,
+            category_id INTEGER NOT NULL,
+            FOREIGN KEY (category_id)
+                 REFERENCES Category(id_category)
+        );
+    SQL
+
+    puts "\n== Tabela StudyItem criada com sucesso =="
+
+rescue SQLite3::Exception => e
+    puts e
+ensure
+    db.close if db
+end
