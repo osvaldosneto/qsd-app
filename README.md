@@ -1,6 +1,6 @@
 # qsd-app
 
-## Intalação
+## Instalação
 
 Necessário instalação gem sql3
 
