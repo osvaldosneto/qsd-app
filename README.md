@@ -2,7 +2,7 @@
 
 ## Instalação
 
-Necessário instalação gem sql3
+Necessário instalação gem sqlite3
 
 ### Clone o repositório
 

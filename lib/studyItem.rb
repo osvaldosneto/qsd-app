@@ -34,25 +34,23 @@ class StudyItem
         studyItens
     end
 
-    def self.listItens
-        itens = StudyItem.all
+    def self.listItens(itens)
         itens.each do |item|
             puts item.nome + " - " + item.category.nome + " - " + item.descricao
         end
     end
 
-    def self.findByNome(nome)
+    def self.findByNomeorDescription(nome)
+        studyItens = []
         db = SQLite3::Database.open "/Users/osvaldosneto/Desktop/qsd-app/database.db"
-        itens = db.execute "SELECT StudyItem.nome, Category.nome from StudyItem 
+        itens = db.execute "SELECT * from StudyItem 
                             INNER JOIN Category 
                             on StudyItem.category_id=Category.id_category
                             WHERE StudyItem.nome LIKE '%#{nome}%' or StudyItem.descricao LIKE '%#{nome}%'"
-        
-        puts ''
-        puts 'Foram encontrados ' + itens.length().to_s + ' itens:'
-        itens.each_with_index do |item, index|
-            puts "#" + (index+1).to_s + " - " + item[0] + " - " + item[1]
+        itens.each do |item|
+            studyItens << StudyItem.new(item[1], Category.getCategoryById(item[5]), item[3], item[2])
         end
+        studyItens
     end
 
     def self.findByCategoriaId(categoria_id)

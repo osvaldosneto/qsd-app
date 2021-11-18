@@ -12,7 +12,6 @@ def cadastrarItem()
     categoria_id = gets.chomp()
     printf("Escreva uma descrição para o item:")
     descricao = gets.chomp()
-    
     studyItem = StudyItem.new(nome, Category.getCategoryById(categoria_id), 1, descricao)
     studyItem.save_to_db
     confirmaContinue()
@@ -25,14 +24,19 @@ def confirmaContinue()
 end
 
 def verTodosItens()
-    StudyItem.listItens
+    StudyItem.listItens(StudyItem.all)
     confirmaContinue()
 end
 
 def buscarItemEstudo()
     printf("Digite uma palavra para procurar:")
     search = gets.chomp()
-    StudyItem.findByNome(search)
+    itens = StudyItem.findByNomeorDescription(search)
+    puts ''
+    puts 'Foram encontrados ' + itens.length().to_s + ' itens:'
+    itens.each_with_index do |item, index|
+        puts "#" + (index+1).to_s + " - " + item.nome + " - " + item.category.nome
+    end
     confirmaContinue()
 end
 
@@ -40,12 +44,7 @@ def listarPorCategoria()
     printf("Escolha uma categoria para listar seus itens:\n")
     Category.listCategorias
     categoria_id = gets.chomp()
-
-    studyItens = StudyItem.findByCategoriaId(categoria_id)
-
-    studyItens.each do |item|
-        puts item.nome + " - " + item.category.nome + " - " + item.descricao
-    end
+    StudyItem.listItens(StudyItem.findByCategoriaId(categoria_id))
     confirmaContinue()
 end
 
