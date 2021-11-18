@@ -2,6 +2,8 @@
 
 ## Intalação
 
+Necessário instalação gem sql3
+
 ### Clone o repositório
 
 ```shell
@@ -15,3 +17,8 @@ cd project
 ruby bin/setup
 ```
 
+### Rode o script principal para iniciar a aplicação
+
+```shell
+ruby lib/study_diary.rb
+```
