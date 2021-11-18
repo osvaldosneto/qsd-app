@@ -48,15 +48,23 @@ def listarPorCategoria()
     confirmaContinue()
 end
 
+def marcarConcluido()
+    StudyItem.listItensWithId(StudyItem.findByUndone)
+    printf("Escolha uma item para marcar como concluído:")
+    id_item = gets.chomp()
+    StudyItem.setStatusDone(id_item)
+    puts "Status modificado com sucesso"
+    confirmaContinue()
+end
 
 
-
-while entrada != '5' do
+while entrada != '6' do
     puts '[1] Cadastrar um item para estudar'
     puts '[2] Ver todos os itens cadastrados'
     puts '[3] Listar por categorias'
     puts '[4] Buscar um item de estudo'
-    puts '[5] Sair'
+    puts '[5] Marcar item como concluído'
+    puts '[6] Sair'
     printf('Escolha uma opção:')
     entrada = gets.chomp()
     
@@ -69,7 +77,9 @@ while entrada != '5' do
         listarPorCategoria()
     when '4'
         buscarItemEstudo()
-    when '4'
+    when '5'
+        marcarConcluido()
+    when '6'
         puts 'Obrigado por usar o Diário de Estudos!!'
     else
         puts 'Opção Inválida'

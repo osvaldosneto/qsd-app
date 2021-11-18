@@ -10,10 +10,6 @@ class StudyItem
         @descricao = descricao
     end
 
-    def setStatusDone()
-        @status = 0
-    end
-
     def save_to_db
         db = SQLite3::Database.open "/Users/osvaldosneto/Desktop/qsd-app/database.db"
         db.execute "INSERT INTO StudyItem (nome, status_item, category_id, descricao) 
@@ -34,9 +30,30 @@ class StudyItem
         studyItens
     end
 
+    def self.findByUndone
+        studyItens = []
+        db = SQLite3::Database.open "/Users/osvaldosneto/Desktop/qsd-app/database.db"
+        itens = db.execute "SELECT * from StudyItem 
+                            INNER JOIN Category 
+                            on StudyItem.category_id=Category.id_category
+                            WHERE StudyItem.status_item=1"
+        itens.each do |item|
+            sutudyItem = StudyItem.new(item[1], Category.getCategoryById(item[5]), item[3], item[2])
+            sutudyItem.id_studyitem = item[0]
+            studyItens << sutudyItem
+        end
+        studyItens
+    end
+
     def self.listItens(itens)
         itens.each do |item|
             puts item.nome + " - " + item.category.nome + " - " + item.descricao
+        end
+    end
+
+    def self.listItensWithId(itens)
+        itens.each do |item|
+            puts "[" + item.id_studyitem.to_s + "] " + item.nome + " - " + item.category.nome + " - " + item.descricao
         end
     end
 
@@ -64,6 +81,11 @@ class StudyItem
             studyItens << StudyItem.new(item[1], Category.getCategoryById(item[5]), item[3], item[2])
         end
         studyItens
+    end
+
+    def self.setStatusDone(id_item)
+        db = SQLite3::Database.open "/Users/osvaldosneto/Desktop/qsd-app/database.db"
+        db.execute "update StudyItem set status_item = 0 where id_studyitem = #{id_item}"
     end
 
 end
